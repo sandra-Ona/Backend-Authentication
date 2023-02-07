@@ -23,6 +23,20 @@ if (err.message.includes ('User validation failed')){
 }
 return errors;
 }
+
+const getregisterpage= (req,res) =>{
+    res.render('signup')
+}
+
+const getloginpage= (req,res) =>{
+    res.render('login')
+}
+
+const getdashboardpage= (req,res) =>{
+    res.render('dashBoard')
+}
+
+
 const register = async (req, res) => {
     const {email, password} = req.body;
     try {
@@ -61,4 +75,4 @@ throw Error ('User not registerd yet')
    }
 }
 
-module.exports ={register, login}
+module.exports ={register, login, getregisterpage, getloginpage, getdashboardpage}

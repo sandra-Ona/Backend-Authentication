@@ -8,6 +8,10 @@ const notFound = require('./middleware/notfound');
 const newRouter = require('./routes/newUserRouter')
 // const userRouter = require('./routes/userRouter');
 
+
+
+app.set("view engine", "ejs");
+
 //middleware
 app.use(express.json());
 
