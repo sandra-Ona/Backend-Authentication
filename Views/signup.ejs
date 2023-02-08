@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Signup</title>
+    <style>
+        .emailError,.passwordError {color:red }
+    </style>
 </head>
 <body>
     <nav>
@@ -14,20 +17,51 @@
             <li> <a href="/dashBoard">HOME PAGE</a></li>
         </ul>
     </nav>
-    <form action="/register" method="post">
+    <form>
         <div>
             <label for ="email">Email:</label>
-        <input type="text" required id="email" name="email"/> <br>
+        <input type="email" required id="email" name="email"/> <br>
+        <div class="emailError"></div>
         </div>
         <br>
         <div>
             <label for ="password">Password:</label>
-            <input type="text" name="password" required id="password"/><br>
+            <input type="password" name="password" required id="password"/><br>
+            <div class="passwordError"></div>
         </div>
         <br>
         <div>
-            <button type="signup">Submit</button>  
+            <button type="submit">SIGN UP</button>  
         </div>
      </form>
+
+     <script>
+        const form = document.querySelector('form')
+        const emailError= document.querySelector('.emailError')
+        const passwordError= document.querySelector('.passwordError')
+
+        form.addEventListener('submit', async(e) => {
+            e.preventDefault();
+
+            const email = form.email.value
+            const password = form.password.value
+
+            const res= await fetch ('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': "application/json"},
+                body: JSON.stringify({ email, password}),
+            });
+
+            const result = await res.json();
+            if (result.success) {
+                window.location.assign('/login');
+            } else{
+                emailError.textContent= result.errors.email;
+                passwordError.textContent= result.errors.password;
+            }
+
+        })
+
+     </script>
 </body>
 </html>
