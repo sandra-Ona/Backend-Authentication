@@ -1,28 +1,13 @@
 const Users = require('../model/user');
 const bcrypt = require('bcrypt');
-const handleErrors = (err) =>{
-//err messages, error code e.g 11000: duplicate message
-let errors = { email:"", password:""}
-if (err.code === 11000){
-    errors.email = 'Email is already in use';
-    return errors;
-} 
-if (err.message=== 'User not registerd yet'){
-    errors.email='This email has not been registered';
-    return errors;
+const jwt = require('jsonwebtoken');
+const handleErrors= require('../middleware/handleErrors')
+
+//header, payload-id, signature, option key
+const generateToken= (id) =>{
+    return jwt.sign({id}, process.env.JWT_SECRET, {expiresIn: "3d" })
 }
-if (err.message=== 'Invalid email or password'){
-    errors.email='Invalid email or password';
-    errors.password= 'Invalid email or password';
-    return errors;
-}
-if (err.message.includes ('User validation failed')){
-    Object.values(err.errors).forEach(({properties}) =>{
-        errors[properties.path]= properties.message;
-    });
-}
-return errors;
-}
+
 
 const getregisterpage= (req,res) =>{
     res.render('signup')
@@ -34,6 +19,10 @@ const getloginpage= (req,res) =>{
 
 const getdashboardpage= (req,res) =>{
     res.render('dashBoard')
+}
+const logout= (req,res) =>{
+    res.cookie('jwt', ' ', {maxAge:1000})
+    res.redirect('/login')
 }
 
 
@@ -65,6 +54,9 @@ const login = async (req, res) => {
 if (user){
    const authenticated = await bcrypt.compare(password, user.password);
    if (authenticated){
+    const token = generateToken(user._id);
+    const time = 3*24*60*60*1000;
+    res.cookie('jwt', token, {maxAge: time});
     return res.status(200).json({success:true, data:user})
    } throw Error ('Invalid email or password')
 }
@@ -75,4 +67,4 @@ throw Error ('User not registerd yet')
    }
 }
 
-module.exports ={register, login, getregisterpage, getloginpage, getdashboardpage}
+module.exports ={register, login, getregisterpage, getloginpage, getdashboardpage, logout}

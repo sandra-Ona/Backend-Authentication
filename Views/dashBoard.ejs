@@ -11,8 +11,12 @@
         <ul>
             <li> <a href="/register">REGISTER</a></li>
             <li> <a href="/login">LOGIN PAGE</a></li>
+            <li> <a href="/logout">LOG OUT</a></li>
         </ul>
     </nav>
     <h1>Welcome!!!</h1>
+    <% if (email){ %>
+        <h3>Welcome <%= email %></h3>
+        <%}%>
 </body>
 </html>

@@ -10,3 +10,5 @@ object.entries
 install ejs
 open folder named views
 open 3 pages-signup page, login page, dashboard
+
+set 
